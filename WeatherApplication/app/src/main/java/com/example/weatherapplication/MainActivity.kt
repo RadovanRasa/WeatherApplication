@@ -19,8 +19,9 @@ import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
 
-    val city: String = "Novi Sad"
-    val API: String = "f74e983a89614c87a24155510230703"
+    var city: String = "Belgrade"
+    val key: String = "f74e983a89614c87a24155510230703"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         tvNext.paint.setShader(textShader)
 
 
-        LoadWeather()
+        LoadWeather(key,city)
         tvLocation.setOnClickListener(View.OnClickListener {
             etCity.visibility = EditText.VISIBLE
             etCity.isEnabled = true
@@ -48,25 +49,28 @@ class MainActivity : AppCompatActivity() {
         })
 
         btnLoad.setOnClickListener(View.OnClickListener {
+            city = etCity.text.toString()
             tvLocation.text = etCity.text
             etCity.visibility = EditText.INVISIBLE
             etCity.isEnabled = false
             btnLoad.visibility = Button.INVISIBLE
             btnLoad.isEnabled = false
+            LoadWeather(key,city)
         })
         imgNext.setOnClickListener(View.OnClickListener {
             val intent =Intent(this, WeekWeatherActivity::class.java)
-
+            intent.putExtra("City", city)
+            intent.putExtra("Key", key)
             startActivity(intent)
         })
 
 
     }
-    fun LoadWeather(){
+    fun LoadWeather(key:String,city: String){
         val weather = RetrofitHelper.getInstance().create(WeatherApi::class.java)
         var post:Weather? = null
         GlobalScope.launch {
-            val result = weather.getWeather()
+            val result = weather.getWeather(key, city)
             if(result!=null){
                 Log.d("Prognoza: ", result.body().toString())
                 post = result.body()

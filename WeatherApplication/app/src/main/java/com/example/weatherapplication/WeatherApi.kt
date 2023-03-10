@@ -2,9 +2,16 @@ package com.example.weatherapplication
 
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface WeatherApi {
-    @GET("/v1/forecast.json?key=f74e983a89614c87a24155510230703&q=Novi%20Sad&days=7&aqi=no&alerts=no")
-    suspend fun getWeather():Response<Weather>
+    @GET("/v1/forecast.json?")
+    suspend fun getWeather(
+        @Query("key") key:String,
+        @Query("q") city: String,
+        @Query("days") days: Int = 7,
+        @Query("aqi") aqi: String ="no",
+        @Query("alerts") alerts: String = "no"
+    ): Response<Weather>
 }

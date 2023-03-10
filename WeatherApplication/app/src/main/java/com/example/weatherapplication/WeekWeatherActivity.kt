@@ -20,7 +20,14 @@ class WeekWeatherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_week_weather)
-
+        var city = intent.getStringExtra("City")
+        var key = intent.getStringExtra("Key")
+        if(key==null){
+            key="f74e983a89614c87a24155510230703"
+        }
+        if(city == null){
+            city = "Novi Sad"
+        }
 
         imgClose.setOnClickListener(View.OnClickListener {
             this.finish()
@@ -28,7 +35,7 @@ class WeekWeatherActivity : AppCompatActivity() {
         val weather = RetrofitHelper.getInstance().create(WeatherApi::class.java)
         var post: Weather? = null
         GlobalScope.launch {
-            val result = weather.getWeather()
+            val result = weather.getWeather(key,city)
             if (result != null) {
                 runOnUiThread(Runnable {
 
